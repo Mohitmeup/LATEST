@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	CustomerBean customObj = new CustomerBean();
-
+	
 	String UCI = "7894561239632587";
 
 	String caseIdGenOne = " ";
