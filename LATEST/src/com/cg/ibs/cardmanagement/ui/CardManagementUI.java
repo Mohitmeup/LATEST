@@ -43,6 +43,10 @@ public class CardManagementUI {
 			System.out.println("Welcome to card management System");
 			System.out.println("Enter 1 to login as a customer");
 			System.out.println("Enter 2 to login as a bank admin");
+			System.out.println("XYZABC");
+			System.out.println("XYZABC");
+			System.out.println("XYZABC");
+			System.out.println("XYZABC");
 
 			while (!success) {
 
