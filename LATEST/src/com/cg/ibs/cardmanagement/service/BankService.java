@@ -10,7 +10,7 @@ import com.cg.ibs.cardmanagement.exceptionhandling.IBSException;
 
 public interface BankService {
 
-	public List<CaseIdBean> viewQueries();
+	public List<CaseIdBean> viewQueries() ;
 
 
 

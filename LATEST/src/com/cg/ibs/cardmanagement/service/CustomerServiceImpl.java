@@ -21,6 +21,7 @@ import com.cg.ibs.cardmanagement.bean.DebitCardBean;
 import com.cg.ibs.cardmanagement.bean.DebitCardTransaction;
 import com.cg.ibs.cardmanagement.dao.BankDao;
 import com.cg.ibs.cardmanagement.dao.CustomerDao;
+import com.cg.ibs.cardmanagement.exceptionhandling.ErrorMessages;
 import com.cg.ibs.cardmanagement.exceptionhandling.IBSException;
 import com.cg.ibs.cardmanagement.dao.CardManagementDaoImpl;
 
@@ -29,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void getCardLength(BigInteger card) throws IBSException {
 		int length = card.toString().length();
 		if (length != 16)
-			throw new IBSException("Incorrect Length of pin ");
+			throw new IBSException(ErrorMessages.INC_LENGTH_PIN_MESSAGE);
 
 	}
 
@@ -41,7 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	CustomerBean customObj = new CustomerBean();
-	
+
 	String UCI = "7894561239632587";
 
 	String caseIdGenOne = " ";
@@ -55,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 	static String customerReferenceID = null;
 
 	String addToQueryTable(String caseIdGenOne) {
-		String caseIdGenTw=String.format("%04d",caseIdGenTwo);
+		String caseIdGenTw = String.format("%04d", caseIdGenTwo);
 		caseIdTotal = caseIdGenOne + caseIdGenTw;
 		caseIdGenTwo++;
 		return caseIdTotal;
@@ -88,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Pattern pattern = Pattern.compile("[123]");
 		Matcher matcher = pattern.matcher(cardType);
 		if (!(matcher.find() && matcher.group().equals(cardType)))
-			throw new IBSException("Not a valid input");
+			throw new IBSException(ErrorMessages.INVALID_INPUT_MESSAGE);
 
 		switch (newCardType) {
 		case 1:
@@ -180,7 +181,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		timestamp = LocalDateTime.now();
 		caseIdTotal = addToQueryTable(caseIdGenOne);
-		customerReferenceID = (caseIdTotal +"0"+ transactionId);
+		customerReferenceID = (caseIdTotal + "0" + transactionId);
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
@@ -206,14 +207,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	public String verifyDebitcardType(BigInteger debitCardNumber) throws IBSException {
 
-		boolean check = customerDao.verifyDebitCardNumber(debitCardNumber);
-		if (check) {
-			String type = customerDao.getdebitCardType(debitCardNumber);
-			return type;
-		} else {
+		return customerDao.getdebitCardType(debitCardNumber);
 
-			throw new NullPointerException("Debit card not found");
-		}
 	}
 
 	@Override
@@ -260,10 +255,10 @@ public class CustomerServiceImpl implements CustomerService {
 		Pattern pattern = Pattern.compile("[0-9]{16}");
 		Matcher matcher = pattern.matcher(debitCardNum);
 		if (!(matcher.find() && matcher.group().equals(debitCardNum)))
-			throw new IBSException("Incorrect  length");
+			throw new IBSException(ErrorMessages.INC_LENGTH_CARD_MESSAGE);
 		boolean check = customerDao.verifyDebitCardNumber(debitCardNumber);
 		if (!check)
-			throw new IBSException(" Debit Card Number does not exist");
+			throw new IBSException(ErrorMessages.DEB_CARD_NOT_EXIST_MESSAGE);
 		return (check);
 
 	}
@@ -273,10 +268,10 @@ public class CustomerServiceImpl implements CustomerService {
 		Pattern pattern = Pattern.compile("[0-9]{10}");
 		Matcher matcher = pattern.matcher(accountNum);
 		if (!(matcher.find() && matcher.group().equals(accountNum)))
-			throw new IBSException("Incorrect  length");
+			throw new IBSException(ErrorMessages.INC_LENGTH_ACCOUNT_MESSAGE);
 		boolean check = customerDao.verifyAccountNumber(accountNumber);
 		if (!check)
-			throw new IBSException(" Account Number does not exist");
+			throw new IBSException(ErrorMessages.INVALID_ACCOUNT_MESSAGE);
 		return (check);
 	}
 
@@ -292,7 +287,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void resetDebitPin(BigInteger debitCardNumber, int newPin) {
 
 		customerDao.setNewDebitPin(debitCardNumber, newPin);
-		
+
 	}
 
 	public boolean verifyCreditCardNumber(BigInteger creditCardNumber) throws IBSException {
@@ -300,10 +295,10 @@ public class CustomerServiceImpl implements CustomerService {
 		Pattern pattern = Pattern.compile("[0-9]{16}");
 		Matcher matcher = pattern.matcher(creditCardNum);
 		if (!(matcher.find() && matcher.group().equals(creditCardNum)))
-			throw new IBSException("Incorrect  length");
+			throw new IBSException(ErrorMessages.INC_LENGTH_CARD_MESSAGE);
 		boolean check1 = customerDao.verifyCreditCardNumber(creditCardNumber);
 		if (!check1)
-			throw new IBSException(" Credit Card Number does not exist");
+			throw new IBSException(ErrorMessages.CRED_CARD_NOT_EXIST_MESSAGE);
 		return (check1);
 	}
 
@@ -320,7 +315,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void resetCreditPin(BigInteger creditCardNumber, int newPin) {
 
 		customerDao.setNewCreditPin(creditCardNumber, newPin);
-	
+
 	}
 
 	@Override
@@ -358,14 +353,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public String verifyCreditcardType(BigInteger creditCardNumber) {
-		boolean check = customerDao.verifyCreditCardNumber(creditCardNumber);
-		if (check) {
-			String type = customerDao.getcreditCardType(creditCardNumber);
-			return type;
-		} else {
-
-			throw new NullPointerException("Credit Card not found");
-		}
+		
+			return customerDao.getcreditCardType(creditCardNumber);
+			
 
 	}
 
@@ -377,7 +367,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		timestamp = LocalDateTime.now();
 		caseIdTotal = addToQueryTable(caseIdGenOne);
-		customerReferenceID = (caseIdTotal +"0"+ transactionId);
+		customerReferenceID = (caseIdTotal + "0" + transactionId);
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
@@ -393,7 +383,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		List<DebitCardTransaction> debitCardBeanTrns = customerDao.getDebitTrans(days, debitCardNumber);
 		if (debitCardBeanTrns.size() == 0)
-			throw new IBSException("NO TRANSACTIONS");
+			throw new IBSException(ErrorMessages.NO_TRANSACTIONS_MESSAGE);
 		return customerDao.getDebitTrans(days, debitCardNumber);
 
 	}
@@ -403,7 +393,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		List<CreditCardTransaction> creditCardBeanTrns = customerDao.getCreditTrans(days, creditCardNumber);
 		if (creditCardBeanTrns.size() == 0)
-			throw new IBSException("NO TRANSACTIONS");
+			throw new IBSException(ErrorMessages.NO_TRANSACTIONS_MESSAGE);
 		return customerDao.getCreditTrans(days, creditCardNumber);
 
 	}
@@ -416,7 +406,7 @@ public class CustomerServiceImpl implements CustomerService {
 			++count;
 		}
 		if (count != 4)
-			throw new IBSException("Incorrect Length of pin ");
+			throw new IBSException(ErrorMessages.INC_LENGTH_PIN_MESSAGE);
 		return count;
 	}
 
@@ -427,7 +417,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		String currentQueryStatus = customerDao.getCustomerReferenceId(caseIdObj, customerReferenceId);
 		if (currentQueryStatus == null)
-			throw new IBSException("Invalid Transaction Id");
+			throw new IBSException(ErrorMessages.INVALID_TRANSACTION_ID_MESSAGE);
 		return currentQueryStatus;
 
 	}
@@ -436,7 +426,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public boolean checkDebitTransactionId(String transactionId) throws IBSException {
 		boolean transactionResult = customerDao.verifyDebitTransactionId(transactionId);
 		if (!transactionResult)
-			throw new IBSException(" Transaction ID does not exist");
+			throw new IBSException(ErrorMessages.TRANSACTION_ID_NOT_EXIST_MESSAGE);
 
 		return transactionResult;
 	}
@@ -445,7 +435,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public boolean verifyCreditCardTransactionId(String transactionId) throws IBSException {
 		boolean transactionResult = customerDao.verifyCreditTransactionId(transactionId);
 		if (!transactionResult)
-			throw new IBSException(" Transaction ID does not exist");
+			throw new IBSException(ErrorMessages.TRANSACTION_ID_NOT_EXIST_MESSAGE);
 
 		return transactionResult;
 	}
@@ -456,7 +446,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Pattern pattern = Pattern.compile("[12]");
 		Matcher matcher = pattern.matcher(cardType);
 		if (!(matcher.find() && matcher.group().equals(cardType)))
-			throw new IBSException("Not a valid input");
+			throw new IBSException(ErrorMessages.INVALID_CHOICE_MESSAGE);
 
 		switch (myChoice) {
 		case 1:
@@ -477,7 +467,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Pattern pattern = Pattern.compile("[2]");
 		Matcher matcher = pattern.matcher(cardType);
 		if (!(matcher.find() && matcher.group().equals(cardType)))
-			throw new IBSException("Not a valid input");
+			throw new IBSException(ErrorMessages.INVALID_CHOICE_MESSAGE);
 		return ("Platinum");
 	}
 
@@ -485,11 +475,11 @@ public class CustomerServiceImpl implements CustomerService {
 	public void checkDays(int days1) throws IBSException {
 		if (days1 < 1) {
 
-			throw new IBSException("Statement can not be generated for less than 1 day");
+			throw new IBSException(ErrorMessages.LESS_DAYS_MESSAGE);
 
 		} else if (days1 >= 730) {
 
-			throw new IBSException("Enter days less than 730");
+			throw new IBSException(ErrorMessages.MORE_DAYS_MESSAGE);
 		}
 
 	}

@@ -18,7 +18,7 @@ public interface CustomerDao {
 	
 	BigInteger getAccountNumber(BigInteger debitCardNumber);
 	String getdebitCardType(BigInteger debitCardNumber);
-	String requestDebitCardUpgrade(CaseIdBean caseIdObj, BigInteger debitCardNumber);
+	void requestDebitCardUpgrade(CaseIdBean caseIdObj, BigInteger debitCardNumber);
 	List<CreditCardBean> viewAllCreditCards();
 	void requestDebitCardLost(CaseIdBean caseIdObj, BigInteger debitCardNumber);
 	void requestCreditCardLost(CaseIdBean caseIdObj, BigInteger creditCardNumber);
