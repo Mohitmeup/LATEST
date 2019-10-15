@@ -29,4 +29,6 @@ public interface BankDao {
 	void actionBlockDC(String queryId, String status);
 	void actionBlockCC(String queryId, String status);
 	void actionUpgradeDC(String queryId);
+	void actionUpgradeCC(String queryId);
+	
 }

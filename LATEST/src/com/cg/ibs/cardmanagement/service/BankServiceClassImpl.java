@@ -14,7 +14,7 @@ import com.cg.ibs.cardmanagement.dao.CardManagementDaoImpl;
 import com.cg.ibs.cardmanagement.exceptionhandling.IBSException;
 
 public class BankServiceClassImpl implements BankService {
-
+	Random random = new Random();
 	BankDao bankDao = new CardManagementDaoImpl();
 	CaseIdBean caseIdObj = new CaseIdBean();
 
@@ -23,16 +23,16 @@ public class BankServiceClassImpl implements BankService {
 
 		List<CaseIdBean> caseBeans = bankDao.viewAllQueries();
 
-		return bankDao.viewAllQueries();
+		return caseBeans;
 
 	}
 
 	public List<DebitCardTransaction> getDebitTransactions(int dys, BigInteger debitCardNumber) throws IBSException {
 
 		List<DebitCardTransaction> debitCardBeanTrns = bankDao.getDebitTrans(dys, debitCardNumber);
-		if (debitCardBeanTrns.size() == 0)
+		if (debitCardBeanTrns.isEmpty())
 			throw new IBSException("NO TRANSACTIONS");
-		return bankDao.getDebitTrans(dys, debitCardNumber);
+		return debitCardBeanTrns;
 	}
 
 	@Override
@@ -76,33 +76,34 @@ public class BankServiceClassImpl implements BankService {
 	public List<CreditCardTransaction> getCreditTrans(int days, BigInteger creditCardNumber) throws IBSException {
 
 		List<CreditCardTransaction> creditCardBeanTrns = bankDao.getCreditTrans(days, creditCardNumber);
-		if (creditCardBeanTrns.size() == 0)
+		if (creditCardBeanTrns.isEmpty())
 			throw new IBSException("NO TRANSACTIONS");
 		return bankDao.getCreditTrans(days, creditCardNumber);
 
 	}
+
 	public String getNewQueryStatus(int newQueryStatus) throws IBSException {
 		String queryStatus = newQueryStatus + "";
 		Pattern pattern = Pattern.compile("[123]");
 		Matcher matcher = pattern.matcher(queryStatus);
 		if (!(matcher.find() && matcher.group().equals(queryStatus)))
-		throw new IBSException("Not a valid input");
+			throw new IBSException("Not a valid input");
 
 		switch (newQueryStatus) {
 		case 1:
 
-		queryStatus = "Approved";
-		break;
+			queryStatus = "Approved";
+			break;
 		case 2:
-		queryStatus = "In Process";
-		break;
+			queryStatus = "In Process";
+			break;
 		case 3:
-		queryStatus = "Disapproved";
-		break;
+			queryStatus = "Disapproved";
+			break;
 
 		}
 		return queryStatus;
-		}
+	}
 
 	public void checkDays(int days1) throws IBSException {
 		if (days1 < 1) {
@@ -137,6 +138,7 @@ public class BankServiceClassImpl implements BankService {
 	}
 
 	private void upgradeCC(String queryId) {
+		bankDao.actionUpgradeCC(queryId);
 
 	}
 
@@ -155,7 +157,7 @@ public class BankServiceClassImpl implements BankService {
 	}
 
 	private void getNewCC(String queryId) {
-		Random random = new Random();
+
 		String cvvString = String.format("%04d", random.nextInt(1000));
 		String pinString = String.format("%04d", random.nextInt(10000));
 		Long first14 = (long) (Math.random() * 100000000000000L);
@@ -168,12 +170,12 @@ public class BankServiceClassImpl implements BankService {
 		String incomeString = String.format("%04d", random.nextInt(100000));
 		double income = Integer.parseInt(incomeString);
 		String status = "Active";
-		bankDao.actionANCC(creditCardNumber, cvv, pin, queryId, score, income,status);
+		bankDao.actionANCC(creditCardNumber, cvv, pin, queryId, score, income, status);
 
 	}
 
 	public void getNewDC(String queryId) {
-		Random random = new Random();
+
 		String cvvString = String.format("%04d", random.nextInt(1000));
 		String pinString = String.format("%04d", random.nextInt(10000));
 		Long first14 = (long) (Math.random() * 100000000000000L);
@@ -182,7 +184,7 @@ public class BankServiceClassImpl implements BankService {
 		int pin = Integer.parseInt(pinString);
 		BigInteger debitCardNumber = BigInteger.valueOf(number);
 		String status = "Active";
-		bankDao.actionANDC(debitCardNumber, cvv, pin, queryId,status);
+		bankDao.actionANDC(debitCardNumber, cvv, pin, queryId, status);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.cg.ibs.cardmanagement.ui;
 
-import java.io.NotActiveException;
+
 import java.math.BigInteger;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -37,16 +37,12 @@ public class CardManagementUI {
 	CustomerService customService = new CustomerServiceImpl();
 	BankService bankService = new BankServiceClassImpl();
 
-	public void doIt() throws IBSException {
+	public void doIt()  {
 		while (true) {
 			success = false;
 			System.out.println("Welcome to card management System");
 			System.out.println("Enter 1 to login as a customer");
 			System.out.println("Enter 2 to login as a bank admin");
-			System.out.println("XYZABC");
-			System.out.println("XYZABC");
-			System.out.println("XYZABC");
-			System.out.println("XYZABC");
 
 			while (!success) {
 
@@ -234,8 +230,8 @@ public class CardManagementUI {
 				String completeDebitCardNumber = (debitCardBean.getDebitCardNumber()).toString();
 				String creditCardShow = completeDebitCardNumber.substring(0, 4) + "-XXXX-XXXX-"
 						+ completeDebitCardNumber.substring(12);
-				System.out.println("Credit Card Number            :\t" + creditCardShow);
-                System.out.println("Type                          :\t" + debitCardBean.getDebitCardType());
+				System.out.println("Debit Card Number             :\t" + creditCardShow);
+				System.out.println("Type                          :\t" + debitCardBean.getDebitCardType());
 				System.out.println("Status                        :\t" + debitCardBean.getDebitCardStatus());
 				System.out.println("Name                          :\t" + debitCardBean.getNameOnDebitCard());
 				System.out.println("UCI                           :\t" + debitCardBean.getUCI());
@@ -285,14 +281,13 @@ public class CardManagementUI {
 				success = true;
 			} catch (InputMismatchException wrongFormat) {
 
-				// scan.next();
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Renter 10 digit account number");
-				continue;
+				
 			} catch (IBSException notFound) {
 				System.out.println(notFound.getMessage());
-				continue;
+
 			}
 		}
 		if (check) {
@@ -323,7 +318,7 @@ public class CardManagementUI {
 
 				} catch (IBSException cardNew) {
 					System.out.println(cardNew.getMessage());
-					continue;
+
 				}
 
 			}
@@ -359,7 +354,7 @@ public class CardManagementUI {
 
 			} catch (IBSException cardNew) {
 				System.out.println(cardNew.getMessage());
-				continue;
+
 			}
 
 		}
@@ -385,18 +380,13 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Enter a valid Debit card number");
-				continue;
+				
 
 			} catch (IBSException noCard) {
 				System.out.println(noCard.getMessage());
-				continue;
-			}
-
-			catch (NullPointerException notFound) {
-				System.out.println("Debit Card not Found");
-				continue;
 
 			}
+
 			if (customService.getDebitCardStatus(debitCardNumber)) {
 				if (check) {
 					if (type.equalsIgnoreCase("Silver")) {
@@ -415,7 +405,7 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Choose between 1 or 2");
-								continue;
+							
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
@@ -436,7 +426,7 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Enter 2 to upgrade");
-								continue;
+								
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
@@ -474,14 +464,11 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Enter a valid Credit card number");
-				continue;
+				
 
-			} catch (NullPointerException notFound) {
-				System.out.println(notFound.getMessage());
-				continue;
 			} catch (IBSException notFound) {
 				System.out.println(notFound.getMessage());
-				continue;
+
 			}
 			if (customService.getCreditCardStatus(creditCardNumber)) {
 				if (check) {
@@ -502,7 +489,7 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Choose between 1 or 2");
-								continue;
+								
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
@@ -523,7 +510,7 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Enter 2 to upgrade");
-								continue;
+							
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
@@ -592,12 +579,10 @@ public class CardManagementUI {
 									} catch (InputMismatchException wrongFormat) {
 										System.out.println("Enter a valid 4 digit pin");
 										scan.next();
-										continue;
+										
 
 									} catch (IBSException ExceptionObj) {
 										System.out.println(ExceptionObj.getMessage());
-
-										continue;
 
 									}
 								}
@@ -611,13 +596,12 @@ public class CardManagementUI {
 						success = true;
 					} catch (InputMismatchException wrongFormat) {
 						System.out.println("Enter a valid 4 digit pin");
-						scan.next();
-						continue;
+						if (scan.next().equalsIgnoreCase("x"))
+							return;
+						
 
 					} catch (IBSException ExceptionObj) {
 						System.out.println(ExceptionObj.getMessage());
-
-						continue;
 
 					}
 				}
@@ -673,11 +657,10 @@ public class CardManagementUI {
 										System.out.println("Enter a valid 4 digit pin");
 										if (scan.next().equalsIgnoreCase("x"))
 											return;
-										continue;
+										
 									} catch (IBSException ExceptionObj) {
 										System.out.println(ExceptionObj.getMessage());
 
-										continue;
 									}
 								}
 
@@ -691,11 +674,10 @@ public class CardManagementUI {
 						System.out.println("Enter a valid 4 digit pin");
 						if (scan.next().equalsIgnoreCase("x"))
 							return;
-						continue;
+						
 					} catch (IBSException ExceptionObj) {
 						System.out.println(ExceptionObj.getMessage());
 
-						continue;
 					}
 				}
 			}
@@ -724,10 +706,10 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Not a valid format");
-				continue;
+				
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
-				continue;
+
 			}
 
 		}
@@ -753,10 +735,10 @@ public class CardManagementUI {
 				System.out.println("Not a valid format");
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
-				continue;
+			
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
-				continue;
+
 			}
 		}
 	}
@@ -778,7 +760,7 @@ public class CardManagementUI {
 				System.out.println("Not a valid format");
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
-				continue;
+
 			}
 		}
 		success = false;
@@ -795,7 +777,7 @@ public class CardManagementUI {
 					System.out.println("Not a valid format");
 				} catch (IBSException newException) {
 					System.out.println(newException.getMessage());
-					continue;
+
 				}
 			}
 
@@ -829,10 +811,10 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Not a valid format");
-				continue;
+				
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
-				continue;
+
 			}
 		}
 		success = false;
@@ -847,11 +829,11 @@ public class CardManagementUI {
 					if (scan.next().equalsIgnoreCase("x"))
 						return;
 					System.out.println("Not a valid format");
-					continue;
+					
 				} catch (IBSException e) {
 
 					System.out.println(e.getMessage());
-					continue;
+
 				}
 
 				try {
@@ -865,7 +847,7 @@ public class CardManagementUI {
 				catch (IBSException e) {
 
 					System.out.println(e.getMessage());
-					continue;
+
 				}
 			}
 		}
@@ -891,14 +873,15 @@ public class CardManagementUI {
 					success = true;
 				}
 			} catch (InputMismatchException wrongFormat) {
-				scan.next();
+				if (scan.next().equalsIgnoreCase("x"))
+					return;
 
 				System.out.println("Not a valid format");
-				continue;
+				
 			} catch (IBSException e) {
 
 				System.out.println(e.getMessage());
-				continue;
+
 			}
 		}
 	}
@@ -919,12 +902,13 @@ public class CardManagementUI {
 					success = true;
 				}
 			} catch (InputMismatchException wrongFormat) {
-				scan.next();
+				if (scan.next().equalsIgnoreCase("x"))
+					return;
 
 				System.out.println("Not a valid format");
 			} catch (IBSException e) {
 				System.out.println(e.getMessage());
-				continue;
+
 			}
 		}
 
@@ -944,7 +928,7 @@ public class CardManagementUI {
 				System.out.println(e.getMessage());
 			} catch (NullPointerException n) {
 				System.out.println("d");
-				continue;
+				
 			}
 		}
 
@@ -976,12 +960,13 @@ public class CardManagementUI {
 
 				success = true;
 			} catch (InputMismatchException wrongFormat) {
-				scan.next();
+				if (scan.next().equalsIgnoreCase("x"))
+					return;
 				System.out.println("Not a valid format");
-				continue;
+			
 			} catch (IBSException ibs) {
 				System.out.println(ibs.getMessage());
-				continue;
+
 			}
 		}
 		if (check) {
@@ -1005,7 +990,7 @@ public class CardManagementUI {
 					success = true;
 				} catch (IBSException e) {
 					System.out.println(e.getMessage());
-					continue;
+
 				} catch (InputMismatchException e) {
 					if (scan.next().equalsIgnoreCase("x"))
 						return;
@@ -1039,7 +1024,7 @@ public class CardManagementUI {
 				System.out.println("Not a valid format");
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
-				continue;
+
 			}
 		}
 		success = false;
@@ -1056,7 +1041,7 @@ public class CardManagementUI {
 					System.out.println("Not a valid format");
 				} catch (IBSException newException) {
 					System.out.println(newException.getMessage());
-					continue;
+
 				}
 			}
 
@@ -1089,10 +1074,10 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Not a valid format");
-				continue;
+				
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
-				continue;
+
 			}
 		}
 		success = false;
@@ -1107,10 +1092,10 @@ public class CardManagementUI {
 					if (scan.next().equalsIgnoreCase("x"))
 						return;
 					System.out.println("Not a valid format");
-					continue;
+					
 				} catch (IBSException e) {
 					System.out.println(e.getMessage());
-					continue;
+
 				}
 
 				try {
@@ -1123,7 +1108,7 @@ public class CardManagementUI {
 				catch (IBSException e) {
 
 					System.out.println(e.getMessage());
-					continue;
+
 				}
 			}
 		}
