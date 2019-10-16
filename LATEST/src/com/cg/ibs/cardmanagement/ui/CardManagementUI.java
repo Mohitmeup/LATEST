@@ -1,6 +1,5 @@
 package com.cg.ibs.cardmanagement.ui;
 
-
 import java.math.BigInteger;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -37,7 +36,7 @@ public class CardManagementUI {
 	CustomerService customService = new CustomerServiceImpl();
 	BankService bankService = new BankServiceClassImpl();
 
-	public void doIt()  {
+	public void doIt() {
 		while (true) {
 			success = false;
 			System.out.println("Welcome to card management System");
@@ -284,7 +283,7 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Renter 10 digit account number");
-				
+
 			} catch (IBSException notFound) {
 				System.out.println(notFound.getMessage());
 
@@ -380,7 +379,6 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Enter a valid Debit card number");
-				
 
 			} catch (IBSException noCard) {
 				System.out.println(noCard.getMessage());
@@ -405,13 +403,19 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Choose between 1 or 2");
-							
+
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
 						}
-						System.out.println("Ticket Raised successfully . Your reference Id is "
-								+ customService.requestDebitCardUpgrade(debitCardNumber, mString));
+						try {
+							customerReferenceId = customService.requestDebitCardUpgrade(debitCardNumber, mString);
+							System.out.println(
+									"Ticket Raised successfully . Your reference Id is " + customerReferenceId);
+						} catch (IBSException e) {
+							System.out.println(e.getMessage());
+						}
+
 					} else if (type.equalsIgnoreCase("Gold")) {
 						System.out.println("Choose 2 to upgrade to Platinum");
 						success = false;
@@ -426,21 +430,24 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Enter 2 to upgrade");
-								
+
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
 						}
-						System.out.println("Ticket Raised successfully . Your reference Id is "
-								+ customService.requestDebitCardUpgrade(creditCardNumber, mString));
+						try {
+							customerReferenceId = customService.requestDebitCardUpgrade(debitCardNumber, mString);
+							System.out.println(
+									"Ticket Raised successfully . Your reference Id is " + customerReferenceId);
+						} catch (IBSException e) {
+							System.out.println(e.getMessage());
+						}
 
 					} else {
 						System.out.println("You already have a Platinum Card");
 					}
 
 				}
-			} else {
-				System.out.println("YOUR CARD IS BLOCKED");
 			}
 
 		}
@@ -464,14 +471,13 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Enter a valid Credit card number");
-				
 
 			} catch (IBSException notFound) {
 				System.out.println(notFound.getMessage());
 
 			}
-			if (customService.getCreditCardStatus(creditCardNumber)) {
-				if (check) {
+			if (check) {
+				if (customService.getCreditCardStatus(creditCardNumber)) {
 
 					if (type.equalsIgnoreCase("Silver")) {
 						System.out.println("Choose 1 to upgrade to Gold");
@@ -489,13 +495,18 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Choose between 1 or 2");
-								
+
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
 						}
-						System.out.println("Ticket Raised successfully . Your reference Id is "
-								+ customService.requestDebitCardUpgrade(creditCardNumber, mString));
+						try {
+							customerReferenceId = customService.requestCreditCardUpgrade(creditCardNumber, mString);
+							System.out.println(
+									"Ticket Raised successfully . Your reference Id is " + customerReferenceId);
+						} catch (IBSException e) {
+							System.out.println(e.getMessage());
+						}
 					} else if (type.equalsIgnoreCase("Gold")) {
 						System.out.println("Choose 2 to upgrade to Platinum");
 						success = false;
@@ -510,21 +521,23 @@ public class CardManagementUI {
 								if (scan.next().equalsIgnoreCase("x"))
 									return;
 								System.out.println("Enter 2 to upgrade");
-							
+
 							} catch (IBSException e) {
 								System.out.println(e.getMessage());
 							}
 						}
-						System.out.println("Ticket Raised successfully . Your reference Id is "
-								+ customService.requestDebitCardUpgrade(creditCardNumber, mString));
-
+						try {
+							customerReferenceId = customService.requestCreditCardUpgrade(creditCardNumber, mString);
+							System.out.println(
+									"Ticket Raised successfully . Your reference Id is " + customerReferenceId);
+						} catch (IBSException e) {
+							System.out.println(e.getMessage());
+						}
 					} else {
 						System.out.println("You already have a Platinum Card");
 					}
 
 				}
-			} else {
-				System.out.println("YOUR CARD IS BLOCKED");
 			}
 		}
 	}
@@ -579,7 +592,6 @@ public class CardManagementUI {
 									} catch (InputMismatchException wrongFormat) {
 										System.out.println("Enter a valid 4 digit pin");
 										scan.next();
-										
 
 									} catch (IBSException ExceptionObj) {
 										System.out.println(ExceptionObj.getMessage());
@@ -598,7 +610,6 @@ public class CardManagementUI {
 						System.out.println("Enter a valid 4 digit pin");
 						if (scan.next().equalsIgnoreCase("x"))
 							return;
-						
 
 					} catch (IBSException ExceptionObj) {
 						System.out.println(ExceptionObj.getMessage());
@@ -657,7 +668,7 @@ public class CardManagementUI {
 										System.out.println("Enter a valid 4 digit pin");
 										if (scan.next().equalsIgnoreCase("x"))
 											return;
-										
+
 									} catch (IBSException ExceptionObj) {
 										System.out.println(ExceptionObj.getMessage());
 
@@ -674,7 +685,7 @@ public class CardManagementUI {
 						System.out.println("Enter a valid 4 digit pin");
 						if (scan.next().equalsIgnoreCase("x"))
 							return;
-						
+
 					} catch (IBSException ExceptionObj) {
 						System.out.println(ExceptionObj.getMessage());
 
@@ -706,7 +717,7 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Not a valid format");
-				
+
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
 
@@ -735,7 +746,7 @@ public class CardManagementUI {
 				System.out.println("Not a valid format");
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
-			
+
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
 
@@ -811,7 +822,7 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Not a valid format");
-				
+
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
 
@@ -829,7 +840,7 @@ public class CardManagementUI {
 					if (scan.next().equalsIgnoreCase("x"))
 						return;
 					System.out.println("Not a valid format");
-					
+
 				} catch (IBSException e) {
 
 					System.out.println(e.getMessage());
@@ -877,7 +888,7 @@ public class CardManagementUI {
 					return;
 
 				System.out.println("Not a valid format");
-				
+
 			} catch (IBSException e) {
 
 				System.out.println(e.getMessage());
@@ -927,8 +938,8 @@ public class CardManagementUI {
 			} catch (IBSException e) {
 				System.out.println(e.getMessage());
 			} catch (NullPointerException n) {
-				System.out.println("d");
-				
+				System.out.println("null");
+
 			}
 		}
 
@@ -963,7 +974,7 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Not a valid format");
-			
+
 			} catch (IBSException ibs) {
 				System.out.println(ibs.getMessage());
 
@@ -1074,7 +1085,7 @@ public class CardManagementUI {
 				if (scan.next().equalsIgnoreCase("x"))
 					return;
 				System.out.println("Not a valid format");
-				
+
 			} catch (IBSException newException) {
 				System.out.println(newException.getMessage());
 
@@ -1092,7 +1103,7 @@ public class CardManagementUI {
 					if (scan.next().equalsIgnoreCase("x"))
 						return;
 					System.out.println("Not a valid format");
-					
+
 				} catch (IBSException e) {
 					System.out.println(e.getMessage());
 

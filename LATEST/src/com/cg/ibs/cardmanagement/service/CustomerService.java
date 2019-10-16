@@ -22,7 +22,7 @@ public interface CustomerService {
 
 	String verifyDebitcardType(BigInteger debitCardNumber) throws IBSException;
 
-	String requestDebitCardUpgrade(BigInteger debitCardNumber,String myChoice);
+	String requestDebitCardUpgrade(BigInteger debitCardNumber,String myChoice)throws IBSException;
 
 	void resetDebitPin(BigInteger debitCardNumber, int newPin);
 
@@ -42,7 +42,8 @@ public interface CustomerService {
 
 	String verifyCreditcardType(BigInteger creditCardNumber);
 
-	String requestCreditCardUpgrade(BigInteger creditCardNumber, int myChoice);
+	String requestCreditCardUpgrade(BigInteger creditCardNumber, String myChoice)throws
+	IBSException;
 
 	String raiseDebitMismatchTicket(String transactionId) throws IBSException;
 
