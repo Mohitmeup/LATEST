@@ -15,4 +15,7 @@ public interface ErrorMessages {
 	public static final String INVALID_CHOICE_MESSAGE = "Not a valid input";
 	public static final String LESS_DAYS_MESSAGE = "Statement can not be generated for less than 1 day";
 	public static final String MORE_DAYS_MESSAGE ="Enter days less than 730";
+	public static final String CARD_BLOCK_MESSAGE="Your Card is blocked ";
+		
+	
 }

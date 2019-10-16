@@ -212,8 +212,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public String requestDebitCardUpgrade(BigInteger debitCardNumber, String myChoice) {
+	public String requestDebitCardUpgrade(BigInteger debitCardNumber, String myChoice) throws IBSException{
 		String status = customerDao.getDebitCardStatus(debitCardNumber);
+		if (status.equals("Blocked")) {
+			throw new IBSException(ErrorMessages.CARD_BLOCK_MESSAGE);
+		} else {
 		CaseIdBean caseIdObj = new CaseIdBean();
 
 		caseIdGenOne = "RDCU";
@@ -231,7 +234,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDao.requestDebitCardUpgrade(caseIdObj, debitCardNumber);
 		return (customerReferenceID);
 	}
-
+	}
 	public boolean getDebitCardStatus(BigInteger debitCardNumber) {
 		boolean status = false;
 		String existingStatus = customerDao.getDebitCardStatus(debitCardNumber);
@@ -319,11 +322,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public String requestCreditCardUpgrade(BigInteger creditCardNumber, int myChoice) {
+	public String requestCreditCardUpgrade(BigInteger creditCardNumber, String myChoice) throws IBSException{
 		String Status = customerDao.getCreditCardStatus(creditCardNumber);
 
 		if (Status.equals("Blocked")) {
-			return ("Sorry. Your card is blocked.");
+			throw new IBSException(ErrorMessages.CARD_BLOCK_MESSAGE);
 		} else {
 			CaseIdBean caseIdObj = new CaseIdBean();
 			caseIdGenOne = "RCCU";
@@ -336,17 +339,10 @@ public class CustomerServiceImpl implements CustomerService {
 			caseIdObj.setStatusOfQuery("Pending");
 			caseIdObj.setCardNumber(creditCardNumber);
 			caseIdObj.setUCI(UCI);
-			if (myChoice == 1) {
-				caseIdObj.setDefineQuery("Gold");
-				customerDao.requestCreditCardUpgrade(caseIdObj, creditCardNumber);
-				return (customerReferenceID);
-			} else if (myChoice == 2) {
-				caseIdObj.setDefineQuery("Platinum");
-				customerDao.requestDebitCardUpgrade(caseIdObj, creditCardNumber);
-				return (customerReferenceID);
-			} else {
-				return ("Choose a valid option");
-			}
+			caseIdObj.setCustomerReferenceId(customerReferenceID);
+			caseIdObj.setDefineQuery(myChoice);
+			customerDao.requestCreditCardUpgrade(caseIdObj, creditCardNumber);
+			return customerReferenceID;
 		}
 
 	}
@@ -382,7 +378,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<DebitCardTransaction> getDebitTransactions(int days, BigInteger debitCardNumber) throws IBSException {
 
 		List<DebitCardTransaction> debitCardBeanTrns = customerDao.getDebitTrans(days, debitCardNumber);
-		if (debitCardBeanTrns.size() == 0)
+		if (debitCardBeanTrns.isEmpty() )
 			throw new IBSException(ErrorMessages.NO_TRANSACTIONS_MESSAGE);
 		return customerDao.getDebitTrans(days, debitCardNumber);
 
@@ -392,7 +388,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<CreditCardTransaction> getCreditTrans(int days, BigInteger creditCardNumber) throws IBSException {
 
 		List<CreditCardTransaction> creditCardBeanTrns = customerDao.getCreditTrans(days, creditCardNumber);
-		if (creditCardBeanTrns.size() == 0)
+		if (creditCardBeanTrns.isEmpty())
 			throw new IBSException(ErrorMessages.NO_TRANSACTIONS_MESSAGE);
 		return customerDao.getCreditTrans(days, creditCardNumber);
 
@@ -418,6 +414,7 @@ public class CustomerServiceImpl implements CustomerService {
 		String currentQueryStatus = customerDao.getCustomerReferenceId(caseIdObj, customerReferenceId);
 		if (currentQueryStatus == null)
 			throw new IBSException(ErrorMessages.INVALID_TRANSACTION_ID_MESSAGE);
+		
 		return currentQueryStatus;
 
 	}

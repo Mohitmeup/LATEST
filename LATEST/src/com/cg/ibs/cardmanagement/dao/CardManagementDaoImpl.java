@@ -67,7 +67,7 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 		debitCardDetails.put(debit2.getDebitCardNumber(), debit2);
 
 		CreditCardBean credit1 = new CreditCardBean(new BigInteger("5189101213259898"), "Active", "Mohit Pursnani", 623,
-				9898, LocalDate.of(2023, Month.JUNE, 30), UCI, "Gold", 200, new BigDecimal("100000.00"),
+				9898, LocalDate.of(2023, Month.JUNE, 30), UCI, "Silver", 200, new BigDecimal("100000.00"),
 				690600.0);
 
 		creditCardDetails.put(credit1.getCreditCardNumber(), credit1);
