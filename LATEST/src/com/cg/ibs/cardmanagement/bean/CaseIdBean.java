@@ -20,7 +20,7 @@ public class CaseIdBean {
 	private LocalDateTime caseTimeStamp;
 	private String statusOfQuery;
 	private BigInteger accountNumber;
-	private String UCI;
+	private BigInteger UCI;
 	private String defineQuery;
 	private BigInteger cardNumber;
 	private String customerReferenceId;
@@ -57,12 +57,12 @@ public class CaseIdBean {
 		this.accountNumber = bigInteger;
 	}
 
-	public String getUCI() {
+	public BigInteger getUCI() {
 		return UCI;
 	}
 
-	public void setUCI(String uCI) {
-		UCI = uCI;
+	public void setUCI(BigInteger UCI) {
+		UCI = UCI;
 	}
 
 	public String getCaseIdTotal() {
@@ -89,4 +89,5 @@ public class CaseIdBean {
 		this.statusOfQuery = statusOfQuery;
 	}
 
+	
 }

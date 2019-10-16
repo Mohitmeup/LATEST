@@ -43,11 +43,7 @@ public class CardManagementUI {
 			System.out.println("Welcome to card management System");
 			System.out.println("Enter 1 to login as a customer");
 			System.out.println("Enter 2 to login as a bank admin");
-			System.out.println("XYZABC");
-			System.out.println("XYZABC");
-			System.out.println("XYZABC");
-			System.out.println("XYZABC");
-
+		
 			while (!success) {
 
 				try {
@@ -238,7 +234,6 @@ public class CardManagementUI {
                 System.out.println("Type                          :\t" + debitCardBean.getDebitCardType());
 				System.out.println("Status                        :\t" + debitCardBean.getDebitCardStatus());
 				System.out.println("Name                          :\t" + debitCardBean.getNameOnDebitCard());
-				System.out.println("UCI                           :\t" + debitCardBean.getUCI());
 				System.out.println("Account number                :\t" + debitCardBean.getAccountNumber());
 				System.out.println("Date of expiry(yyyy/MM/dd)    :\t" + debitCardBean.getDebitDateOfExpiry());
 				System.out.println("......................................................");
@@ -586,9 +581,27 @@ public class CardManagementUI {
 
 										if (customService.getPinLength(pin) != 4)
 											throw new IBSException("Incorrect Length of pin ");
-										customService.resetDebitPin(debitCardNumber, pin);
-										System.out.println("Pin Updated Successfully!!!!");
-										success = true;
+										
+										
+										else {
+
+											System.out.println("Re-enter your new pin");
+											int rpin = scan.nextInt();
+											if (customService.getPinLength(rpin) != 4)
+												throw new IBSException("Incorrect Length of pin ");
+											else {
+												if (rpin == pin) {
+													customService.resetDebitPin(debitCardNumber, pin);
+													System.out.println("PIN CHANGED SUCCESSFULLY!!!");
+													success = true;
+												} else {
+													System.out.println("PINS DO NOT MATCH...TRY AGAIN");
+													success = true;
+												}
+											}
+										}
+
+										
 									} catch (InputMismatchException wrongFormat) {
 										System.out.println("Enter a valid 4 digit pin");
 										scan.next();
@@ -666,9 +679,26 @@ public class CardManagementUI {
 
 										if (customService.getPinLength(pin) != 4)
 											throw new IBSException("Incorrect Length of pin ");
-										customService.resetCreditPin(creditCardNumber, pin);
-										System.out.println("Pin Updated successfully!!!!");
-										success = true;
+										
+										else {
+
+											System.out.println("Re-enter your new pin");
+											int rpin = scan.nextInt();
+											if (customService.getPinLength(rpin) != 4)
+												throw new IBSException("Incorrect Length of pin ");
+											else {
+												if (rpin == pin) {
+													customService.resetCreditPin(creditCardNumber, pin);
+													System.out.println("PIN CHANGED SUCCESSFULLY!!!");
+													success = true;
+												} else {
+													System.out.println("PINS DO NOT MATCH...TRY AGAIN");
+													success = true;
+												}
+											}
+										}
+										
+										
 									} catch (InputMismatchException wrongFormat) {
 										System.out.println("Enter a valid 4 digit pin");
 										if (scan.next().equalsIgnoreCase("x"))

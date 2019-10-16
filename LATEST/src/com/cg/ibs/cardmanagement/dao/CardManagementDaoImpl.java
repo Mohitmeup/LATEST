@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.cg.ibs.cardmanagement.bean.AccountBean;
 import com.cg.ibs.cardmanagement.bean.CaseIdBean;
 import com.cg.ibs.cardmanagement.bean.CreditCardBean;
 import com.cg.ibs.cardmanagement.bean.CreditCardTransaction;
@@ -26,6 +27,7 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 	DebitCardBean bean = new DebitCardBean();
 	CreditCardBean bean1 = new CreditCardBean();
 	CustomerBean bean2 = new CustomerBean();
+	AccountBean bean3=new AccountBean();
 	private static boolean result = false;
 	private static String queryStatus;
 	private static Map<String, DebitCardTransaction> debitCardTransactionDetails = new HashMap<String, DebitCardTransaction>();
@@ -34,43 +36,46 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 	private static Map<BigInteger, DebitCardBean> debitCardDetails = new HashMap<BigInteger, DebitCardBean>();
 	private static Map<BigInteger, CreditCardBean> creditCardDetails = new HashMap<BigInteger, CreditCardBean>();
 	private static Map<BigInteger, CustomerBean> customerDetails = new HashMap<BigInteger, CustomerBean>();
-
+	private static Map<BigInteger, AccountBean> accountDetails = new HashMap<BigInteger, AccountBean>();
 	static {
+		
+		AccountBean account1=new AccountBean(new BigInteger("12345678910"),new BigInteger("7894561239632587"));
+		accountDetails.put(account1.getAccountNumber(), account1);
 
-		DebitCardBean debit1 = new DebitCardBean(new BigInteger("1234567890"), new BigInteger("5234567891012131"),
-				"Active", "Mohit Pursnani", 067, 2131, LocalDate.of(2024, Month.JULY, 30), "7894561239632587",
+		DebitCardBean debit1 = new DebitCardBean(new BigInteger("12345678910"), new BigInteger("5234567891012131"),
+				"Active", "Mohit Pursnani", 067, 2131, LocalDate.of(2024, Month.JULY, 30),
 				"Platinum");
-		DebitCardBean debit2 = new DebitCardBean(new BigInteger("1234567890"), new BigInteger("5221562391012233"),
-				"Active", "Mohit Pursnani", 057, 2233, LocalDate.of(2022, Month.AUGUST, 30), "7894561239632587",
+		DebitCardBean debit2 = new DebitCardBean(new BigInteger("12345678910"), new BigInteger("5221562391012233"),
+				"Active", "Mohit Pursnani", 057, 2233, LocalDate.of(2022, Month.AUGUST, 30),
 				"Silver");
 
 		debitCardDetails.put(debit1.getDebitCardNumber(), debit1);
 		debitCardDetails.put(debit2.getDebitCardNumber(), debit2);
 
 		CreditCardBean credit1 = new CreditCardBean(new BigInteger("5189101213259898"), "Active", "Mohit Pursnani", 623,
-				9898, LocalDate.of(2023, Month.JUNE, 30), "7894561239632587", "Gold", 200, new BigDecimal("100000.00"),
+				9898, LocalDate.of(2023, Month.JUNE, 30), new BigInteger("7894561239632587"), "Gold", 200, new BigDecimal("100000.00"),
 				690600.0);
 
 		creditCardDetails.put(credit1.getCreditCardNumber(), credit1);
 
-		CustomerBean cust1 = new CustomerBean(new BigInteger("1234567890"), "7894561239632587", "Mohit", "Pursnani",
+		CustomerBean cust1 = new CustomerBean(new BigInteger( "7894561239632587"), "Mohit", "Pursnani",
 				"mohit@gmail.com", "201965231351", "9774216545");
 
-		customerDetails.put(cust1.getAccountNumber(), cust1);
+		customerDetails.put(cust1.getUCI(), cust1);
 
-		DebitCardTransaction debittrans1 = new DebitCardTransaction("DEB101", "7894561239632587",
-				new BigInteger("1234567890"), new BigInteger("5234567891012131"),
+		DebitCardTransaction debittrans1 = new DebitCardTransaction("DEB101",new BigInteger( "7894561239632587"),
+				new BigInteger("12345678910"), new BigInteger("5234567891012131"),
 				LocalDateTime.of(2019, Month.OCTOBER, 04, 12, 54, 6), new BigDecimal("1563"), "Petrol", "Debit");
-		DebitCardTransaction debittrans2 = new DebitCardTransaction("DEB102", "7894561239632587",
-				new BigInteger("1234567890"), new BigInteger("5234567891012131"),
+		DebitCardTransaction debittrans2 = new DebitCardTransaction("DEB102", new BigInteger( "7894561239632587"),
+				new BigInteger("12345678910"), new BigInteger("5234567891012131"),
 				LocalDateTime.of(2019, Month.AUGUST, 8, 18, 32, 8), new BigDecimal("20.45"), "Interest", "Credit");
 		debitCardTransactionDetails.put(debittrans1.getTransactionId(), debittrans1);
 		debitCardTransactionDetails.put(debittrans2.getTransactionId(), debittrans2);
 
-		CreditCardTransaction credittrans1 = new CreditCardTransaction("CRED101", "7894561239632587",
+		CreditCardTransaction credittrans1 = new CreditCardTransaction("CRED101", new BigInteger( "7894561239632587"),
 				new BigInteger("5189101213259898"), LocalDateTime.of(2018, Month.OCTOBER, 12, 11, 54, 6),
 				new BigDecimal("5000"), "Shopping");
-		CreditCardTransaction credittrans2 = new CreditCardTransaction("CRED102", "7894561239632587",
+		CreditCardTransaction credittrans2 = new CreditCardTransaction("CRED102", new BigInteger( "7894561239632587"),
 				new BigInteger("5189101213259898"), LocalDateTime.of(2018, Month.SEPTEMBER, 25, 23, 21, 6),
 				new BigDecimal("5000"), "Movie");
 		creditCardTransactionDetails.put(credittrans1.getTransactionid(), credittrans1);
@@ -112,6 +117,23 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 		BigInteger acc = debitCardDetails.get(debitCardNumber).getAccountNumber();
 		return acc;
 	}
+	
+	public BigInteger getNDCUci(BigInteger accountNumber) {
+		BigInteger UCI = accountDetails.get(accountNumber).getUCI();
+		return UCI;
+	}
+	
+	public BigInteger getDebitUci(BigInteger debitCardNumber) {
+		BigInteger accountNumber = debitCardDetails.get(debitCardNumber).getAccountNumber();
+		return getNDCUci(accountNumber);
+	}
+	
+	public BigInteger getCreditUci(BigInteger creditCardNumber) {
+		return creditCardDetails.get(creditCardNumber).getUCI();
+	
+	}
+	
+	
 
 	@Override
 	public void newCreditCard(CaseIdBean caseIdObj) {
@@ -212,7 +234,7 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 	public void requestCreditCardUpgrade(CaseIdBean caseIdObj, BigInteger creditCardNumber) {
 
 		queryDetails.put(caseIdObj.getCaseIdTotal(), caseIdObj);
-		System.out.println("TICKET RAISED SUCCESSFULLY");
+	
 
 	}
 
@@ -308,19 +330,19 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 
 	@Override
 	public void actionANDC(BigInteger debitCardNumber, Integer cvv, Integer pin, String queryId, String status) {
-		String uci = new String();
+		BigInteger UCI;
 
 		for (Entry<String, CaseIdBean> entry : queryDetails.entrySet()) {
 
 			BigInteger accountNumber = entry.getValue().getAccountNumber();
-			uci = entry.getValue().getUCI();
+			UCI = entry.getValue().getUCI();
 			String type = entry.getValue().getDefineQuery();
 			CustomerBean bean = new CustomerBean();
 			bean = customerDetails.get(accountNumber);
 			String firstName = bean.getFirstName();
 			String lastName = bean.getLastName();
 			DebitCardBean debit3 = new DebitCardBean(accountNumber, debitCardNumber, status,
-					(firstName + " " + lastName), cvv, pin, LocalDate.now().plusYears(5), uci, type);
+					(firstName + " " + lastName), cvv, pin, LocalDate.now().plusYears(5), type);
 			debitCardDetails.put(debitCardNumber, debit3);
 			queryDetails.remove(queryId);
 		}
@@ -330,12 +352,12 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 	@Override
 	public void actionANCC(BigInteger creditCardNumber, int cvv, int pin, String queryId, int score, double income,
 			String status) {
-		String uci = new String();
+		BigInteger UCI;
 
 		for (Entry<String, CaseIdBean> entry : queryDetails.entrySet()) {
 
 			BigDecimal limit = new BigDecimal("0");
-			uci = entry.getValue().getUCI();
+			UCI = entry.getValue().getUCI();
 			String type = entry.getValue().getDefineQuery();
 			if (type == "Silver") {
 				limit = new BigDecimal(50000);
@@ -344,10 +366,10 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 			} else if (type == "Platinium") {
 				limit = new BigDecimal(500000);
 			}
-			uci = entry.getValue().getUCI();
+			UCI = entry.getValue().getUCI();
 			CustomerBean bean = new CustomerBean();
 			CreditCardBean credit3 = new CreditCardBean(creditCardNumber, status, "Mohit Pursnani", cvv, pin,
-					LocalDate.now().plusYears(5), uci, type, score, limit, income);
+					LocalDate.now().plusYears(5), UCI, type, score, limit, income);
 			creditCardDetails.put(creditCardNumber, credit3);
 			queryDetails.remove(queryId);
 		}
@@ -394,5 +416,36 @@ public class CardManagementDaoImpl implements CustomerDao, BankDao {
 		bean1 = creditCardDetails.get(creditCardNumber);
 		String status = bean1.getCreditCardStatus();
 		return status;
+	}
+
+	@Override
+	public BigInteger getDebitCardNumber(String transactionId) {
+	return debitCardTransactionDetails.get(transactionId).getDebitCardNumber();
+	}
+
+	@Override
+	public BigInteger getDMUci(String transactionId) {
+     BigInteger dbCard=getDebitCardNumber(transactionId);
+     return getDebitUci( dbCard);
+		
+	}
+
+	@Override
+	public BigInteger getDMAccountNumber(String transactionId) {
+		BigInteger dbCard=getDebitCardNumber(transactionId);
+		return getAccountNumber(dbCard);
+	}
+
+	@Override
+	public BigInteger getCMUci(String transactionId) {
+		BigInteger creditCardNumber=creditCardDetails.get(transactionId).getCreditCardNumber();
+		return getCreditUci(creditCardNumber);
+	}
+
+	@Override
+	public BigInteger getUci() {
+	BigInteger UCI = bean2.getUCI();
+	System.out.println(UCI);
+		return UCI;
 	}
 }

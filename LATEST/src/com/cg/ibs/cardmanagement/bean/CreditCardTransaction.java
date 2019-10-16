@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class CreditCardTransaction {
 	
 	private String transactionid;
-	private String UCI;
+	private BigInteger UCI;
 	private BigInteger creditCardNumber;
 	private LocalDateTime date;
 	private BigDecimal amount;
@@ -20,11 +20,11 @@ public class CreditCardTransaction {
 				+ creditCardNumber + ", date=" + date + ", amount=" + amount + ", description=" + description + "]";
 	}
 
-	public  CreditCardTransaction(String transactionid, String uCI, BigInteger creditCardNumber, LocalDateTime date,
+	public  CreditCardTransaction(String transactionid, BigInteger uCI, BigInteger creditCardNumber, LocalDateTime date,
 			BigDecimal amount, String description) {
 		
 		this.transactionid = transactionid;
-		UCI = uCI;
+		this.UCI = uCI;
 		this.creditCardNumber = creditCardNumber;
 		this.date = date;
 		this.amount = amount;
@@ -37,11 +37,11 @@ public class CreditCardTransaction {
 	public void setTransactionid(String transactionid) {
 		this.transactionid = transactionid;
 	}
-	public String getUCI() {
+	public BigInteger getUCI() {
 		return UCI;
 	}
-	public void setUCI(String uCI) {
-		UCI = uCI;
+	public void setUCI(BigInteger UCI) {
+		this.UCI = UCI;
 	}
 	public BigInteger getCreditCardNumber() {
 		return creditCardNumber;

@@ -29,6 +29,9 @@ public interface CustomerDao {
 	int getDebitCardPin(BigInteger debitCardNumber);
 	void setNewCreditPin(BigInteger creditCardNumber, int newPin);
 	int getCreditCardPin(BigInteger creditCardNumber);
+	 BigInteger getUci();
+	 BigInteger getDebitUci(BigInteger debitCardNumber);
+	 BigInteger getCreditUci(BigInteger creditCardNumber);
 
 	String getcreditCardType(BigInteger creditCardNumber);
 	boolean verifyCreditTransactionId(String transactionId);
@@ -44,4 +47,11 @@ public interface CustomerDao {
 	String getCustomerReferenceId(CaseIdBean caseIdObj, String customerReferenceId);
 	String getDebitCardStatus(BigInteger debitCardNumber);
 	String getCreditCardStatus(BigInteger creditCardNumber);
+	BigInteger getDebitCardNumber(String transactionId);
+	BigInteger getDMUci(String transactionId);
+
+	BigInteger getDMAccountNumber(String transactionId);
+
+	BigInteger getCMUci(String transactionId);
+	BigInteger getNDCUci(BigInteger accountNumber);
 }

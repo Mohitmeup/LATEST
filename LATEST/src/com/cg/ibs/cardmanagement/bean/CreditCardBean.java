@@ -12,7 +12,7 @@ public class CreditCardBean {
 	private int CreditCvvNum;
 	private int creditCurrentPin;
 	private LocalDate creditDateOfExpiry;
-	private String UCI;
+	private BigInteger UCI;
 	private String creditCardType;
 	private int creditScore;
 	private BigDecimal creditLimit;
@@ -26,7 +26,7 @@ public class CreditCardBean {
 
 
 	public CreditCardBean(BigInteger creditCardNumber, String creditCardStatus, String nameOnCreditCard,
-			int creditCvvNum, int creditCurrentPin, LocalDate creditDateOfExpiry, String uCI, String creditCardType,
+			int creditCvvNum, int creditCurrentPin, LocalDate creditDateOfExpiry, BigInteger UCI, String creditCardType,
 			int creditScore, BigDecimal creditLimit, double income) {
 		super();
 		this.creditCardNumber = creditCardNumber;
@@ -35,7 +35,7 @@ public class CreditCardBean {
 		CreditCvvNum = creditCvvNum;
 		this.creditCurrentPin = creditCurrentPin;
 		this.creditDateOfExpiry = creditDateOfExpiry;
-		UCI = uCI;
+		UCI = UCI;
 		this.creditCardType = creditCardType;
 		this.creditScore = creditScore;
 		this.creditLimit = creditLimit;
@@ -103,13 +103,13 @@ public class CreditCardBean {
 	}
 
 
-	public String getUCI() {
+	public BigInteger getUCI() {
 		return UCI;
 	}
 
 
-	public void setUCI(String uCI) {
-		UCI = uCI;
+	public void setUCI(BigInteger UCI) {
+		UCI = UCI;
 	}
 
 

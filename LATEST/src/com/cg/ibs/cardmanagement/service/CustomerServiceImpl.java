@@ -8,11 +8,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.cg.ibs.cardmanagement.bean.AccountBean;
 import com.cg.ibs.cardmanagement.bean.CaseIdBean;
 import com.cg.ibs.cardmanagement.bean.CreditCardBean;
 import com.cg.ibs.cardmanagement.bean.CreditCardTransaction;
@@ -41,8 +43,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	CustomerBean customObj = new CustomerBean();
-	
-	String UCI = "7894561239632587";
+	AccountBean accountObj = new AccountBean();
+	Random random = new Random();
 
 	String caseIdGenOne = " ";
 	static String caseIdTotal = " ";
@@ -55,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
 	static String customerReferenceID = null;
 
 	String addToQueryTable(String caseIdGenOne) {
-		String caseIdGenTw=String.format("%04d",caseIdGenTwo);
+		String caseIdGenTw = String.format("%04d", caseIdGenTwo);
 		caseIdTotal = caseIdGenOne + caseIdGenTw;
 		caseIdGenTwo++;
 		return caseIdTotal;
@@ -69,14 +71,14 @@ public class CustomerServiceImpl implements CustomerService {
 		caseIdGenOne = "ANDC";
 
 		caseIdTotal = addToQueryTable(caseIdGenOne);
-		customerReferenceID = (caseIdTotal + accountNumber.toString().substring(3));
+		customerReferenceID = (caseIdTotal + accountNumber.toString().substring(4));
 		timestamp = LocalDateTime.now();
 		caseIdObj.setDefineQuery(newCardType);
 		caseIdObj.setAccountNumber(accountNumber);
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
-		caseIdObj.setUCI(UCI);
+		caseIdObj.setUCI(customerDao.getNDCUci(accountNumber));
 		caseIdObj.setCustomerReferenceId(customerReferenceID);
 		customerDao.newDebitCard(caseIdObj, accountNumber);
 		return customerReferenceID;
@@ -119,14 +121,14 @@ public class CustomerServiceImpl implements CustomerService {
 		CaseIdBean caseIdObj = new CaseIdBean();
 		caseIdGenOne = "ANCC";
 		caseIdTotal = addToQueryTable(caseIdGenOne);
-		customerReferenceID = (caseIdTotal + UCI.toString().substring(9));
+		customerReferenceID = (caseIdTotal + String.format("%04d", random.nextInt(10000000)));
 		timestamp = LocalDateTime.now();
 		caseIdObj.setCustomerReferenceId(customerReferenceID);
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
-		caseIdObj.setUCI(UCI);
 		caseIdObj.setDefineQuery(newcardType);
+		caseIdObj.setUCI(customerDao.getUci());
 		customerDao.newCreditCard(caseIdObj);
 		return customerReferenceID;
 	}
@@ -143,7 +145,7 @@ public class CustomerServiceImpl implements CustomerService {
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
-		caseIdObj.setUCI(UCI);
+		caseIdObj.setUCI(customerDao.getDebitUci(debitCardNumber));
 		caseIdObj.setCardNumber(debitCardNumber);
 		caseIdObj.setDefineQuery("Block");
 		caseIdObj.setCustomerReferenceId(customerReferenceID);
@@ -165,7 +167,7 @@ public class CustomerServiceImpl implements CustomerService {
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
-		caseIdObj.setUCI(UCI);
+		caseIdObj.setUCI(customerDao.getCreditUci(creditCardNumber));
 		caseIdObj.setCardNumber(creditCardNumber);
 		caseIdObj.setDefineQuery("Blocked");
 		caseIdObj.setCustomerReferenceId(customerReferenceID);
@@ -180,11 +182,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 		timestamp = LocalDateTime.now();
 		caseIdTotal = addToQueryTable(caseIdGenOne);
-		customerReferenceID = (caseIdTotal +"0"+ transactionId);
+		customerReferenceID = (caseIdTotal + "0" + transactionId);
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
-		caseIdObj.setUCI(UCI);
+		caseIdObj.setAccountNumber(customerDao.getDMAccountNumber(transactionId));
+		caseIdObj.setUCI(customerDao.getDMUci(transactionId));
+		caseIdObj.setCardNumber(customerDao.getDebitCardNumber(transactionId));
 		caseIdObj.setDefineQuery("Transaction ID" + transactionId);
 		caseIdObj.setCustomerReferenceId(customerReferenceID);
 		customerDao.raiseDebitMismatchTicket(caseIdObj, transactionId);
@@ -230,9 +234,9 @@ public class CustomerServiceImpl implements CustomerService {
 		caseIdObj.setStatusOfQuery("Pending");
 		caseIdObj.setCardNumber(debitCardNumber);
 		caseIdObj.setCustomerReferenceId(customerReferenceID);
-		caseIdObj.setUCI(UCI);
+		caseIdObj.setUCI(customerDao.getDebitUci(debitCardNumber));
 		caseIdObj.setDefineQuery(myChoice);
-
+		caseIdObj.setAccountNumber(customerDao.getAccountNumber(debitCardNumber));
 		customerDao.requestDebitCardUpgrade(caseIdObj, debitCardNumber);
 		return (customerReferenceID);
 	}
@@ -292,7 +296,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void resetDebitPin(BigInteger debitCardNumber, int newPin) {
 
 		customerDao.setNewDebitPin(debitCardNumber, newPin);
-		
+
 	}
 
 	public boolean verifyCreditCardNumber(BigInteger creditCardNumber) throws IBSException {
@@ -320,7 +324,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void resetCreditPin(BigInteger creditCardNumber, int newPin) {
 
 		customerDao.setNewCreditPin(creditCardNumber, newPin);
-	
+
 	}
 
 	@Override
@@ -340,7 +344,7 @@ public class CustomerServiceImpl implements CustomerService {
 			caseIdObj.setCaseTimeStamp(timestamp);
 			caseIdObj.setStatusOfQuery("Pending");
 			caseIdObj.setCardNumber(creditCardNumber);
-			caseIdObj.setUCI(UCI);
+			caseIdObj.setUCI(customerDao.getCreditUci(creditCardNumber));
 			if (myChoice == 1) {
 				caseIdObj.setDefineQuery("Gold");
 				customerDao.requestCreditCardUpgrade(caseIdObj, creditCardNumber);
@@ -377,11 +381,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 		timestamp = LocalDateTime.now();
 		caseIdTotal = addToQueryTable(caseIdGenOne);
-		customerReferenceID = (caseIdTotal +"0"+ transactionId);
+		customerReferenceID = (caseIdTotal + "0" + transactionId);
 		caseIdObj.setCaseIdTotal(caseIdTotal);
 		caseIdObj.setCaseTimeStamp(timestamp);
 		caseIdObj.setStatusOfQuery("Pending");
-		caseIdObj.setUCI(UCI);
+		caseIdObj.setUCI(customerDao.getCMUci(transactionId));
 		caseIdObj.setDefineQuery("Transaction ID:" + transactionId);
 		caseIdObj.setCustomerReferenceId(customerReferenceID);
 		customerDao.raiseCreditMismatchTicket(caseIdObj, transactionId);

@@ -12,7 +12,6 @@ public class DebitCardBean {
 	private int debitCvvNum;
 	private int debitCurrentPin;
 	private LocalDate debitDateOfExpiry;
-	private String UCI;
 	private String debitCardType;
 
 	public DebitCardBean() {
@@ -21,7 +20,7 @@ public class DebitCardBean {
 	}
 
 	public DebitCardBean(BigInteger accountNumber, BigInteger debitCardNumber, String debitCardStatus,
-			String nameOnDebitCard, int debitCvvNum, int debitCurrentPin, LocalDate debitDateOfExpiry, String uCI,
+			String nameOnDebitCard, int debitCvvNum, int debitCurrentPin, LocalDate debitDateOfExpiry, 
 			String debitCardType) {
 		super();
 		this.accountNumber = accountNumber;
@@ -31,7 +30,6 @@ public class DebitCardBean {
 		this.debitCvvNum = debitCvvNum;
 		this.debitCurrentPin = debitCurrentPin;
 		this.debitDateOfExpiry = debitDateOfExpiry;
-		UCI = uCI;
 		this.debitCardType = debitCardType;
 	}
 
@@ -91,14 +89,7 @@ public class DebitCardBean {
 		this.debitDateOfExpiry = debitDateOfExpiry;
 	}
 
-	public String getUCI() {
-		return UCI;
-	}
-
-	public void setUCI(String uCI) {
-		UCI = uCI;
-	}
-
+	
 	public String getDebitCardType() {
 		return debitCardType;
 	}
@@ -112,7 +103,7 @@ public class DebitCardBean {
 		return "DebitCardBean [accountNumber=" + accountNumber + ", debitCardNumber=" + debitCardNumber
 				+ ", debitCardStatus=" + debitCardStatus + ", nameOnDebitCard=" + nameOnDebitCard + ", debitCvvNum="
 				+ debitCvvNum + ", debitCurrentPin=" + debitCurrentPin + ", debitDateOfExpiry=" + debitDateOfExpiry
-				+ ", UCI=" + UCI + ", debitCardType=" + debitCardType + "]";
+				+ ", debitCardType=" + debitCardType + "]";
 	}
 
 
