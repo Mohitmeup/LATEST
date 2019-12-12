@@ -1,0 +1,20 @@
+version: '2.3'
+services:
+  database:
+    container_name: ${project}-database-${TAG}
+    hostname: ${project}-database-${TAG}
+    image: 10.1.90.11:8084/oracle/database:${TAG}
+    ports:
+    - "1521:1521"
+    volumes:
+        - pwc_db_volume:/pwc
+        - ${DOCKER_SHARED}:/pwctemp
+    networks:
+        - app_net
+volumes:         
+  pwc_db_volume:
+       name: "pwc_db_volume"
+networks:
+  app_net:
+        name: "${CONTAINERS_NET}"
+        driver: bridge
